@@ -1,60 +1,55 @@
-import { Component } from 'react';
+// import {} from 'react';
+import { useEffect, useRef } from 'react';
 import { LOTTO_VALUE } from '../../constants';
 import { getRandomNumberArray } from '../../utils';
 
-export default class LottoItem extends Component {
-  state = {
-    numbers: getRandomNumberArray(
-      LOTTO_VALUE.MIN_NUMBER,
-      LOTTO_VALUE.MAX_NUMBER,
-      LOTTO_VALUE.NUMBER_COUNT
-    ),
-  };
+export default function LottoItem(props) {
+  const isToggled = props.isToggled;
+  const numbers = useRef(
+    getRandomNumberArray(LOTTO_VALUE.MIN_NUMBER, LOTTO_VALUE.MAX_NUMBER, LOTTO_VALUE.NUMBER_COUNT)
+  );
 
-  componentDidUpdate(prevProps) {
-    if (this.props.isModalOpened && this.props.isModalOpened !== prevProps.isModalOpened) {
-      this.increaseWinningCounts();
-    }
-  }
-
-  // 일치하는 개수를 구하는 연산식
-  getMatchedCount = () => {
+  const getMatchedCount = () => {
     return (
-      this.props.winningNumbers.length +
-      this.state.numbers.length -
-      new Set([...this.props.winningNumbers, ...this.state.numbers]).size
+      props.winningNumbers.length +
+      numbers.current.length -
+      new Set([...props.winningNumbers, ...numbers.current]).size
     );
   };
 
-  increaseWinningCounts = () => {
-    const matchedCount = this.getMatchedCount();
+  const increaseWinningCounts = () => {
+    const matchedCount = getMatchedCount();
 
     if (matchedCount === LOTTO_VALUE.MATCHED_COUNT.FIRST) {
-      this.props.increaseWinningCounts(LOTTO_VALUE.RANK.FIRST);
+      props.increaseWinningCounts(LOTTO_VALUE.RANK.FIRST);
     }
     if (matchedCount === LOTTO_VALUE.MATCHED_COUNT.THIRD) {
-      if (this.state.numbers.includes(this.props.bonusNumber)) {
-        this.props.increaseWinningCounts(LOTTO_VALUE.RANK.SECOND);
+      if (numbers.current.includes(props.bonusNumber)) {
+        props.increaseWinningCounts(LOTTO_VALUE.RANK.SECOND);
       } else {
-        this.props.increaseWinningCounts(LOTTO_VALUE.RANK.THIRD);
+        props.increaseWinningCounts(LOTTO_VALUE.RANK.THIRD);
       }
     }
     if (matchedCount === LOTTO_VALUE.MATCHED_COUNT.FOURTH) {
-      this.props.increaseWinningCounts(LOTTO_VALUE.RANK.FOURTH);
+      props.increaseWinningCounts(LOTTO_VALUE.RANK.FOURTH);
     }
     if (matchedCount === LOTTO_VALUE.MATCHED_COUNT.FIFTH) {
-      this.props.increaseWinningCounts(LOTTO_VALUE.RANK.FIFTH);
+      props.increaseWinningCounts(LOTTO_VALUE.RANK.FIFTH);
     }
   };
 
-  render() {
-    const isToggled = this.props.isToggled;
+  // TODO: React Hook useEffect has a missing dependency: 'increaseWinningCounts'. Either include it or remove the dependency array
+  // dependency 에러가 나는데, 왜 발생하는 건지 더 알아보기.
+  useEffect(() => {
+    if (props.isModalOpened) {
+      increaseWinningCounts();
+    }
+  }, [props.isModalOpened]);
 
-    return (
-      <li className={`lotto-item ${isToggled ? 'toggle' : ''}`}>
-        <span className="lotto-icon">🎟</span>
-        {isToggled && <span>{[...this.state.numbers].join(', ')}</span>}
-      </li>
-    );
-  }
+  return (
+    <li className={`lotto-item ${isToggled ? 'toggle' : ''}`}>
+      <span className="lotto-icon">🎟</span>
+      {isToggled && <span>{[...numbers.current].join(', ')}</span>}
+    </li>
+  );
 }
