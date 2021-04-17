@@ -1,92 +1,75 @@
 import './index.css';
 import './css/index.css';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Main } from './components/Main';
 import { ResultModal } from './components/Modal';
 import { LOTTO_VALUE, LOTTO_PRICE } from './constants';
 import { getAnnouncementDate } from './utils/lottoUtils';
 
-export default class App extends Component {
-  state = {
-    isModalOpened: false,
-    winningCounts: {
-      [LOTTO_VALUE.RANK.FIRST]: 0,
-      [LOTTO_VALUE.RANK.SECOND]: 0,
-      [LOTTO_VALUE.RANK.THIRD]: 0,
-      [LOTTO_VALUE.RANK.FOURTH]: 0,
-      [LOTTO_VALUE.RANK.FIFTH]: 0,
-    },
-    lottoCount: 0,
-    mainComponentKey: new Date(),
-    announcementDate: getAnnouncementDate(),
+const initialState = {
+  isModalOpened: false,
+  winningCounts: {
+    [LOTTO_VALUE.RANK.FIRST]: 0,
+    [LOTTO_VALUE.RANK.SECOND]: 0,
+    [LOTTO_VALUE.RANK.THIRD]: 0,
+    [LOTTO_VALUE.RANK.FOURTH]: 0,
+    [LOTTO_VALUE.RANK.FIFTH]: 0,
+  },
+  lottoCount: 0,
+};
+
+export default function App() {
+  const [isModalOpened, setIsModalOpened] = useState(initialState.isModalOpened);
+  const [winningCounts, setWinningCounts] = useState(initialState.winningCounts);
+  const [lottoCount, setLottoCount] = useState(initialState.lottoCount);
+  const [announcementDate, setAnnouncementDate] = useState(getAnnouncementDate());
+  const [mainComponentKey, setMainComponentKey] = useState(new Date());
+
+  const resetState = () => {
+    setIsModalOpened(initialState.isModalOpened);
+    setWinningCounts(initialState.winningCounts);
+    setLottoCount(initialState.lottoCount);
+    setAnnouncementDate(getAnnouncementDate());
+    setMainComponentKey(new Date());
   };
 
-  initialState = this.state;
-
-  resetState = () => {
-    this.setState({ ...this.initialState, mainComponentKey: new Date() });
-  };
-
-  setWinningCounts = (winningCounts) => {
-    this.setState({ winningCounts: winningCounts });
-  };
-
-  increaseWinningCounts = (rank) => {
-    this.setState((prevState) => ({
-      winningCounts: {
-        ...prevState.winningCounts,
-        [rank]: prevState.winningCounts[rank] + 1,
-      },
-    }));
-  };
-
-  setLottoCount = (count) => {
-    this.setState({
-      lottoCount: count,
+  const increaseWinningCounts = (rank) => {
+    setWinningCounts({
+      ...winningCounts,
+      [rank]: winningCounts[rank] + 1,
     });
   };
 
-  setAnnouncementDate = (announcementDate) => {
-    this.setState({ announcementDate: announcementDate });
+  const openModal = () => {
+    setIsModalOpened(true);
   };
 
-  openModal = () => {
-    this.setState({
-      isModalOpened: true,
-    });
+  const closeModal = () => {
+    setIsModalOpened(false);
+    setWinningCounts(initialState.winningCounts);
   };
 
-  closeModal = () => {
-    this.setState({
-      isModalOpened: false,
-    });
-
-    this.setWinningCounts(this.initialState.winningCounts);
-  };
-
-  render() {
-    return (
-      <div className="app d-flex justify-center items-center">
-        <Main
-          announcementDate={this.state.announcementDate}
-          setAnnouncementDate={this.setAnnouncementDate}
-          isModalOpened={this.state.isModalOpened}
-          openModal={this.openModal}
-          increaseWinningCounts={this.increaseWinningCounts}
-          setWinningCounts={this.setWinningCounts}
-          lottoCount={this.state.lottoCount}
-          setLottoCount={this.setLottoCount}
-          key={this.state.mainComponentKey}
+  return (
+    <div className="app d-flex justify-center items-center">
+      <Main
+        announcementDate={announcementDate}
+        setAnnouncementDate={setAnnouncementDate}
+        isModalOpened={isModalOpened}
+        openModal={openModal}
+        increaseWinningCounts={increaseWinningCounts}
+        setWinningCounts={setWinningCounts}
+        lottoCount={lottoCount}
+        setLottoCount={setLottoCount}
+        key={mainComponentKey}
+      />
+      {isModalOpened && (
+        <ResultModal
+          closeModal={closeModal}
+          winningCounts={winningCounts}
+          paidMoney={lottoCount * LOTTO_PRICE}
+          resetAllState={resetState}
         />
-        {this.state.isModalOpened && (
-          <ResultModal
-            closeModal={this.closeModal}
-            winningCounts={this.state.winningCounts}
-            paidMoney={this.state.lottoCount * LOTTO_PRICE}
-            resetAllState={this.resetState}
-          />
-        )}
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 }
