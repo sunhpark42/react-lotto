@@ -1,29 +1,38 @@
-import { ID, MESSAGE } from '../../constants';
+import { useState } from 'react';
+import { MESSAGE } from '../../constants';
 import { isDuplicatedArray } from '../../utils';
 
 export default function WinningNumberForm(props) {
+  const [winningNumberInputs, setWinningNumberInputs] = useState({});
+  const [bonusNumberInput, setBonusNumberInput] = useState(0);
+
+  const onWinningNumberInputChange = (event) => {
+    setWinningNumberInputs({
+      ...winningNumberInputs,
+      [event.target.name]: event.target.valueAsNumber,
+    });
+  };
+
+  const onBonusNumberInputChange = (event) => {
+    setBonusNumberInput(event.target.valueAsNumber);
+  };
+
   const onSubmitWinningNumberForm = (event) => {
     event.preventDefault();
+    const winningNumberInputsArray = Object.values(winningNumberInputs);
 
     if (!props.lottoCount) {
       alert(MESSAGE.ALERT.LOTTO_NOT_EXIST);
       return;
     }
 
-    const winningNumberInputs =
-      event.target.elements[ID.MAIN.WINNING_NUMBER_FORM.WINNING_NUMBER_FIELDSET].elements;
-    const winningNumbers = Array.from(winningNumberInputs).map(($input) => $input.valueAsNumber);
-    const bonusNumberInput =
-      event.target.elements[ID.MAIN.WINNING_NUMBER_FORM.BONUS_NUMBER_FIELDSET].elements;
-    const [bonusNumber] = Array.from(bonusNumberInput).map(($input) => $input.valueAsNumber);
-
-    if (isDuplicatedArray([...winningNumbers, bonusNumber])) {
+    if (isDuplicatedArray([...winningNumberInputsArray, bonusNumberInput])) {
       alert(MESSAGE.ALERT.DUPLICATED_WINNING_NUMBERS);
       return;
     }
 
-    props.setWinningNumbers(winningNumbers);
-    props.setBonusNumber(bonusNumber);
+    props.setWinningNumbers(winningNumberInputsArray);
+    props.setBonusNumber(bonusNumberInput);
     props.openModal();
   };
 
@@ -42,6 +51,9 @@ export default function WinningNumberForm(props) {
                 min="1"
                 max="45"
                 id="first-winning-number"
+                name="first-winning-number"
+                value={winningNumberInputs['first-winning-number'] || ''}
+                onChange={onWinningNumberInputChange}
                 className="winning-number-input"
                 required
               />
@@ -49,6 +61,9 @@ export default function WinningNumberForm(props) {
                 type="number"
                 min="1"
                 max="45"
+                name="second-winning-number"
+                value={winningNumberInputs['second-winning-number'] || ''}
+                onChange={onWinningNumberInputChange}
                 aria-label="winning-number"
                 required
                 className="winning-number-input"
@@ -57,6 +72,9 @@ export default function WinningNumberForm(props) {
                 type="number"
                 min="1"
                 max="45"
+                name="third-winning-number"
+                value={winningNumberInputs['third-winning-number'] || ''}
+                onChange={onWinningNumberInputChange}
                 aria-label="winning-number"
                 required
                 className="winning-number-input"
@@ -65,6 +83,9 @@ export default function WinningNumberForm(props) {
                 type="number"
                 min="1"
                 max="45"
+                name="fourth-winning-number"
+                value={winningNumberInputs['fourth-winning-number'] || ''}
+                onChange={onWinningNumberInputChange}
                 aria-label="winning-number"
                 required
                 className="winning-number-input"
@@ -73,6 +94,9 @@ export default function WinningNumberForm(props) {
                 type="number"
                 min="1"
                 max="45"
+                name="fifth-winning-number"
+                value={winningNumberInputs['fifth-winning-number'] || ''}
+                onChange={onWinningNumberInputChange}
                 aria-label="winning-number"
                 required
                 className="winning-number-input"
@@ -81,6 +105,9 @@ export default function WinningNumberForm(props) {
                 type="number"
                 min="1"
                 max="45"
+                name="sixth-winning-number"
+                value={winningNumberInputs['sixth-winning-number'] || ''}
+                onChange={onWinningNumberInputChange}
                 aria-label="winning-number"
                 required
                 className="winning-number-input"
@@ -92,7 +119,16 @@ export default function WinningNumberForm(props) {
             className="d-flex flex-col justify-center items-center"
           >
             <legend className="text-center font-bold">보너스</legend>
-            <input type="number" className="winning-number-input" min="1" max="45" required />
+            <input
+              type="number"
+              className="winning-number-input"
+              min="1"
+              max="45"
+              name="bonus-number"
+              value={bonusNumberInput || ''}
+              onChange={onBonusNumberInputChange}
+              required
+            />
           </fieldset>
         </div>
         <button className="w-100 basic-button mt-3" type="submit">
