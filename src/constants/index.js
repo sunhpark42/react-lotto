@@ -9,6 +9,12 @@ export const CLASS_NAME = {
 
 export const ID = {
   MAIN: {
+<<<<<<< HEAD
+=======
+    PURCHASE_FORM: {
+      INPUT: 'money-input',
+    },
+>>>>>>> 87ae5f915cdc99a0bd6228da4b87819864212ea8
     WINNING_NUMBER_FORM: {
       WINNING_NUMBER_FIELDSET: 'winning-number-fieldset',
       BONUS_NUMBER_FIELDSET: 'bonus-number-fieldset',
@@ -42,6 +48,7 @@ export const LOTTO_VALUE = {
   MATCHED_COUNT: {
     FIRST: 6,
     THIRD: 5,
+<<<<<<< HEAD
     FOURTH: 4,
     FIFTH: 3,
   },
@@ -53,6 +60,11 @@ export const LOTTO_VALUE = {
     FOURTH: '4개',
     FIFTH: '3개',
   },
+=======
+    FORTH: 4,
+    FIFTH: 3,
+  },
+>>>>>>> 87ae5f915cdc99a0bd6228da4b87819864212ea8
 };
 
 export const PRIZE_BY_RANK = {

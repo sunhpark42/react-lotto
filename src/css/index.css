@@ -38,16 +38,23 @@ fieldset {
 }
 
 .money-input {
+<<<<<<< HEAD
   width: 100%;
+=======
+  width: 82%;
+>>>>>>> 87ae5f915cdc99a0bd6228da4b87819864212ea8
   height: 32px;
   box-sizing: border-box;
   padding: 0.3rem 0.5rem;
 }
 
+<<<<<<< HEAD
 .money-submit-button {
   width: 20%;
 }
 
+=======
+>>>>>>> 87ae5f915cdc99a0bd6228da4b87819864212ea8
 .lotto-list {
   padding: 0;
   margin: 0;

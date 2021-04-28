@@ -21,6 +21,7 @@ export const getRandomNumberArray = (min, max, length) => {
 
   return Array.from(numbers);
 };
+<<<<<<< HEAD
 
 export const keyGenerator = (function () {
   let key = 0;
@@ -33,3 +34,5 @@ export const keyGenerator = (function () {
     return key;
   };
 })();
+=======
+>>>>>>> 87ae5f915cdc99a0bd6228da4b87819864212ea8
